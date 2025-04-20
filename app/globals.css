@@ -15,7 +15,3 @@
   --color-accent-pink: #b5446b;
 }
 
-body {
-  background: var(--color-background-primary);
-  color: var(--color-content-body);
-}
