@@ -1,9 +1,16 @@
 import Header from "@/app/components/landing-page/Header";
-import Button from "@/app/components/ui/Button";
-import TextInput from "@/app/components/ui/TextInput";
+import { auth } from "@/app/lib/auth";
 import { Rocket } from "lucide-react";
+import { redirect } from "next/navigation";
+import CreateLinkForm from "./CreateLinkForm";
 
-export default function Criar() {
+export default async function Criar() {
+  const session = await auth()
+
+  if (!session) {
+    return redirect("/")
+  }
+
   return (
     <div>
       <Header />
@@ -13,18 +20,7 @@ export default function Criar() {
           <Rocket className="size-10" />
         </div>
 
-        <form
-          action=""
-          className="w-full flex items-center gap-2"
-        >
-          <span className="text-white">projectinbio.com/</span>
-          <TextInput />
-          <Button className="w-[126px]">Criar</Button>
-        </form>
-
-        <div>
-          <span className="text-accent-pink">Erro de exemplo</span>
-        </div>
+        <CreateLinkForm />
       </div>
     </div>
   )
