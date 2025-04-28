@@ -1,10 +1,12 @@
 import ProjectCard from "@/app/components/commons/ProjectCard";
 import TotalVisits from "@/app/components/commons/TotalVisits";
 import UserCard from "@/app/components/commons/UserCard";
+import { auth } from "@/app/lib/auth";
 import { getProfileData } from "@/app/server/get-profile-data";
-import { Plus } from "lucide-react";
+
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import NewProject from "./new-project";
 
 export default async function ProfilePage({
   params
@@ -16,6 +18,14 @@ export default async function ProfilePage({
   const profileData = await getProfileData(profileId)
 
   if (!profileData) return notFound()
+
+  const session = await auth()
+
+  const isOwner = session?.user?.id === profileData.userId
+
+  //TODO: get projects
+  //TODO: adicionar page view
+  //TODO: se o usuário não estiver mais no trial, não deixar ver o projeto. Redirecionar para a tela do upgrade
 
   return (
     <div className="relative h-screen flex p-20 overflow-hidden">
@@ -38,10 +48,9 @@ export default async function ProfilePage({
         <ProjectCard title="10 cliques" image="/project1.jpg" projectName="Projeto 1" description="Descrição detalhada do que o projeto faz." />
         <ProjectCard title="20 cliques" image="/project2.jpg" projectName="Projeto 2" description="Descrição detalhada do que o projeto faz." />
         <ProjectCard title="10 cliques" image="/project1.jpg" projectName="Projeto 1" description="Descrição detalhada do que o projeto faz." />
-        <button className="w-[340px] h-[132px] rounded-[20px] bg-background-secondary flex items-center gap-2 justify-center cursor-pointer hover:border border-dashed border-border-secondary">
-          <Plus className="size-10 text-accent-green" />
-          <span className="text-white">Novo projeto</span>
-        </button>
+        {isOwner && (
+          <NewProject profileId={profileId} />
+        )}
       </div>
 
       <div className="absolute bottom-4 right-0 left-0 w-min mx-auto">
